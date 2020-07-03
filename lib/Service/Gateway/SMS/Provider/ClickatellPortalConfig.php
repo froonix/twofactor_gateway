@@ -54,8 +54,8 @@ class ClickatellPortalConfig implements IProviderConfig {
 		return $this->getOrFail('clickatell_portal_apikey');
 	}
 
-	public function setApiKey(string $api) {
-		$this->config->setAppValue(Application::APP_NAME, 'clickatell_portal_apikey', $api);
+	public function setApiKey(string $apiKey) {
+		$this->config->setAppValue(Application::APP_NAME, 'clickatell_portal_apikey', $apiKey);
 	}
 
 	public function isComplete(): bool {
