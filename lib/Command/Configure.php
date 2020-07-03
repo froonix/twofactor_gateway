@@ -375,6 +375,7 @@ class Configure extends Command {
 				$providerConfig->setApiKey($apiKey);
 
 				break;
+
 			case 'smsglobal':
 				$config->setProvider($provider);
 				/** @var SMSGlobalConfig $providerConfig */
