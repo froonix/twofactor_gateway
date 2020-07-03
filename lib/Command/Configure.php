@@ -38,6 +38,7 @@ use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\PuzzelSMSConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\HuaweiE3531Config;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\SpryngSMSConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\ClickatellCentralConfig;
+use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\ClickatellPortalConfig;
 use OCA\TwoFactorGateway\Service\Gateway\Telegram\Gateway as TelegramGateway;
 use OCA\TwoFactorGateway\Service\Gateway\Telegram\GatewayConfig as TelegramConfig;
 use Symfony\Component\Console\Command\Command;
@@ -108,7 +109,7 @@ class Configure extends Command {
 	private function configureSms(InputInterface $input, OutputInterface $output) {
 		$helper = $this->getHelper('question');
 
-		$providerQuestion = new Question('Please choose a SMS provider (websms, playsms, clockworksms, puzzelsms, ecallsms, voipms, huawei_e3531, spryng, sms77io, ovh, clickatellcentral', 'websms');
+		$providerQuestion = new Question('Please choose a SMS provider (websms, playsms, clockworksms, puzzelsms, ecallsms, voipms, huawei_e3531, spryng, sms77io, ovh, clickatellcentral, clickatellportal', 'websms');
 		$provider = $helper->ask($input, $output, $providerQuestion);
 
 		/** @var SMSConfig $config */

@@ -180,4 +180,17 @@ occ twofactorauth:gateway:configure sms
 
 Select `clickatellcentral` and enter your API-ID, API username and API password.
 
+### Clickatell (SMS Platform)
+URL: https://portal.clickatell.com/
+Stability: Experimental
+
+Use new Clickatell.com API for sending SMS.
+
+Interactive admin configuration:
+```bash
+occ twofactorauth:gateway:configure sms
+```
+
+Select `clickatellportal` and enter your API-Key.
+
 [User Documentation]: https://nextcloud-twofactor-gateway.readthedocs.io/en/latest/User%20Documentation/
