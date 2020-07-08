@@ -308,8 +308,11 @@ class Configure extends Command {
 
 				$apiQuestion = new Question('Please enter your portal.clickatell.com API-Key: ');
 				$apiKey = $helper->ask($input, $output, $apiQuestion);
+				$fromQuestion = new Question('Please enter your sender number for two-way messaging. Leave it empty for one-way messaging: ');
+				$fromNumber = $helper->ask($input, $output, $fromQuestion);
 
 				$providerConfig->setApiKey($apiKey);
+				$providerConfig->setFromNumber($fromNumber);
 				break;
 
 			case 'clicksend':
