@@ -66,6 +66,10 @@ class ClickatellPortalConfig implements IProviderConfig {
 		$this->config->setAppValue(Application::APP_NAME, 'clickatell_portal_from', $fromNumber);
 	}
 
+	public function deleteFromNumber() {
+		$this->config->deleteAppValue(Application::APP_NAME, 'clickatell_portal_from');
+	}
+
 	public function isComplete(): bool {
 		$set = $this->config->getAppKeys(Application::APP_NAME);
 		return count(array_intersect($set, self::expected)) === count(self::expected);

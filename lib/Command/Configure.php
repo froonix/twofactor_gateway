@@ -311,7 +311,12 @@ class Configure extends Command {
 				$fromNumber = $helper->ask($input, $output, $fromQuestion);
 
 				$providerConfig->setApiKey($apiKey);
-				$providerConfig->setFromNumber($fromNumber);
+
+				if (empty($fromNumber)) {
+					$providerConfig->deleteFromNumber();
+				} else {
+					$providerConfig->setFromNumber($fromNumber);
+				}
 				break;
 
 			default:
