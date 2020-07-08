@@ -54,7 +54,7 @@ class ClickatellPortal implements IProvider {
 		$config = $this->getConfig();
 		try {
 			$from = $config->getFromNumber();
-			$from = !empty($from) ? sprintf('&from=%s', urlencode($from)) : '';
+			$from = !is_null($from) ? sprintf('&from=%s', urlencode($from)) : '';
 			$response = $this->client->get(vsprintf('https://platform.clickatell.com/messages/http/send?apiKey=%s&to=%s&content=%s%s', [
 				urlencode($config->getApiKey()),
 				urlencode($identifier),
