@@ -53,13 +53,20 @@ class ClickatellPortal implements IProvider {
 	public function send(string $identifier, string $message) {
 		$config = $this->getConfig();
 		try {
-			$this->client->get(vsprintf('https://platform.clickatell.com/messages/http/send?apiKey=%s&to=%s&content=%s', [
+			$from = $config->getFromNumber();
+			$from = !empty($from) ? sprintf('&from=%s', urlencode($from)) : '';
+			$response = $this->client->get(vsprintf('https://platform.clickatell.com/messages/http/send?apiKey=%s&to=%s&content=%s%s', [
 				urlencode($config->getApiKey()),
 				urlencode($identifier),
 				urlencode($message),
+				$from,
 			]));
 		} catch (Exception $ex) {
 			throw new SmsTransmissionException();
+		}
+
+		if ($response->getStatusCode() !== 202) {
+			throw new SmsTransmissionException($response->getBody());
 		}
 	}
 
