@@ -30,8 +30,7 @@ use OCA\TwoFactorGateway\Exception\ConfigurationException;
 use OCP\IConfig;
 
 class ClickatellPortalConfig implements IProviderConfig {
-
-	const expected = [
+	public const expected = [
 		'clickatell_portal_apikey',
 	];
 
@@ -58,7 +57,8 @@ class ClickatellPortalConfig implements IProviderConfig {
 		$this->config->setAppValue(Application::APP_NAME, 'clickatell_portal_apikey', $apiKey);
 	}
 
-	public function getFromNumber() /* ?string */ {
+	public function getFromNumber() /* ?string */
+    {
 		return $this->config->getAppValue(Application::APP_NAME, 'clickatell_portal_from', null);
 	}
 
@@ -76,7 +76,7 @@ class ClickatellPortalConfig implements IProviderConfig {
 	}
 
 	public function remove() {
-		foreach(self::expected as $key) {
+		foreach (self::expected as $key) {
 			$this->config->deleteAppValue(Application::APP_NAME, $key);
 		}
 	}
