@@ -32,14 +32,18 @@ use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\ClickSendConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\ClockworkSMSConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\EcallSMSConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\PlaySMSConfig;
+use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\SMSGlobalConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\Sms77IoConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\OvhConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\WebSmsConfig;
+use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\SipGateConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\PuzzelSMSConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\HuaweiE3531Config;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\SpryngSMSConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\ClickatellCentralConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\ClickatellPortalConfig;
+use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\VoipbusterConfig;
+use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\SerwerSMSConfig;
 use OCA\TwoFactorGateway\Service\Gateway\Telegram\Gateway as TelegramGateway;
 use OCA\TwoFactorGateway\Service\Gateway\Telegram\GatewayConfig as TelegramConfig;
 use Symfony\Component\Console\Command\Command;
@@ -82,13 +86,13 @@ class Configure extends Command {
 		switch ($gatewayName) {
 			case 'signal':
 				$this->configureSignal($input, $output);
-				break;
+				return 0;
 			case 'sms':
 				$this->configureSms($input, $output);
-				break;
+				return 0;
 			case 'telegram':
 				$this->configureTelegram($input, $output);
-				break;
+				return 0;
 			default:
 				$output->writeln("<error>Invalid gateway $gatewayName</error>");
 				return;
@@ -110,7 +114,7 @@ class Configure extends Command {
 	private function configureSms(InputInterface $input, OutputInterface $output) {
 		$helper = $this->getHelper('question');
 
-		$providerQuestion = new Question('Please choose a SMS provider (websms, playsms, clockworksms, puzzelsms, ecallsms, voipms, huawei_e3531, spryng, sms77io, ovh, clickatellcentral, clickatellportal, clicksend): ', 'websms');
+		$providerQuestion = new Question('Please choose a SMS provider (sipgate, websms, playsms, clockworksms, puzzelsms, ecallsms, voipms, voipbuster, huawei_e3531, spryng, sms77io, ovh, clickatellcentral, clickatellportal, clicksend, serwersms, smsglobal): ', 'websms');
 		$provider = $helper->ask($input, $output, $providerQuestion);
 
 		/** @var SMSConfig $config */
@@ -128,6 +132,23 @@ class Configure extends Command {
 
 				$providerConfig->setUser($username);
 				$providerConfig->setPassword($password);
+
+				break;
+			case 'sipgate':
+				$config->setProvider($provider);
+				/** @var SipGateConfig $providerConfig */
+				$providerConfig = $config->getProvider()->getConfig();
+
+				$tokenIdQuestion = new Question('Please enter your sipgate token-id: ');
+				$tokenId = $helper->ask($input, $output, $tokenIdQuestion);
+				$accessTokenQuestion = new Question('Please enter your sipgate access token: ');
+				$accessToken = $helper->ask($input, $output, $accessTokenQuestion);
+				$webSmsExtensionQuestion = new Question('Please enter your sipgate web-sms extension: ');
+				$webSmsExtension = $helper->ask($input, $output, $webSmsExtensionQuestion);
+
+				$providerConfig->setTokenId($tokenId);
+				$providerConfig->setAccessToken($accessToken);
+				$providerConfig->setWebSmsExtension($webSmsExtension);
 
 				break;
 			case 'playsms':
@@ -211,6 +232,26 @@ class Configure extends Command {
 				$password = $helper->ask($input, $output, $passwordQuestion);
 
 				$didQuestion = new Question('Please enter your VoIP.ms DID: ');
+				$did = $helper->ask($input, $output, $didQuestion);
+
+				$providerConfig->setUser($username);
+				$providerConfig->setPassword($password);
+				$providerConfig->setDid($did);
+				break;
+
+			case 'voipbuster':
+				$config->setProvider($provider);
+
+				/** @var VoipbusterConfig $providerConfig */
+				$providerConfig = $config->getProvider()->getConfig();
+
+				$usernameQuestion = new Question('Please enter your Voipbuster API username: ');
+				$username = $helper->ask($input, $output, $usernameQuestion);
+
+				$passwordQuestion = new Question('Please enter your Voipbuster API password: ');
+				$password = $helper->ask($input, $output, $passwordQuestion);
+
+				$didQuestion = new Question('Please enter your Voipbuster DID: ');
 				$did = $helper->ask($input, $output, $didQuestion);
 
 				$providerConfig->setUser($username);
@@ -334,11 +375,48 @@ class Configure extends Command {
 				$providerConfig->setApiKey($apiKey);
 
 				break;
+			case 'smsglobal':
+				$config->setProvider($provider);
+				/** @var SMSGlobalConfig $providerConfig */
+				$providerConfig = $config->getProvider()->getConfig();
+
+				$urlproposal = 'https://api.smsglobal.com/http-api.php';
+				$urlQuestion = new Question('Please enter your SMSGlobal http-api:', $urlproposal);
+				$url = $helper->ask($input, $output, $urlQuestion);
+				$usernameQuestion = new Question('Please enter your SMSGlobal username (for http-api):');
+				$username = $helper->ask($input, $output, $usernameQuestion);
+				$passwordQuestion = new Question('Please enter your SMSGlobal password: (for http-api):');
+				$password = $helper->ask($input, $output, $passwordQuestion);
+
+				$providerConfig->setUrl($url);
+				$providerConfig->setUser($username);
+				$providerConfig->setPassword($password);
+
+				break;
+
+			case 'serwersms':
+				$config->setProvider($provider);
+				/** @var SerwerSMSConfig $providerConfig */
+				$providerConfig = $config->getProvider()->getConfig();
+
+				$loginQuestion = new Question('Please enter your SerwerSMS.pl API login: ');
+				$login = $helper->ask($input, $output, $loginQuestion);
+				$passwordQuestion = new Question('Please enter your SerwerSMS.pl API password: ');
+				$password = $helper->ask($input, $output, $passwordQuestion);
+				$senderQuestion = new Question('Please enter your SerwerSMS.pl sender name: ');
+				$sender = $helper->ask($input, $output, $senderQuestion);
+
+				$providerConfig->setLogin($login);
+				$providerConfig->setPassword($password);
+				$providerConfig->setSender($sender);
+
+				break;
 
 			default:
 				$output->writeln("Invalid provider $provider");
 				break;
 		}
+		return 0;
 	}
 
 	private function configureTelegram(InputInterface $input, OutputInterface $output) {

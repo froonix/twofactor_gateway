@@ -1,6 +1,6 @@
 {
   "name": "twofactor_gateway",
-  "version": "0.16.0",
+  "version": "0.20.0",
   "description": "A two-factor auth provider for Nextcloud",
   "main": "index.js",
   "directories": {
@@ -8,8 +8,9 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "./node_modules/webpack-cli/bin/cli.js --config js/webpack.prod.config.js",
-    "dev": "./node_modules/webpack-cli/bin/cli.js --config js/webpack.dev.config.js --watch",
+    "build": "webpack --node-env production --progress",
+    "dev": "webpack --node-env development --progress",
+    "watch": "webpack --node-env development --progress --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,17 +20,15 @@
   "author": "",
   "license": "AGPL-3.0",
   "dependencies": {
-    "css-loader": "^3.6.0",
-    "jquery": "^3.5.1",
     "nextcloud_fetch": "^2.1.0",
-    "vue": "^2.6.11",
-    "vue-loader": "^15.9.2",
-    "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue": "^2.6.14"
   },
   "devDependencies": {
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-merge": "^4.2.2"
+    "@nextcloud/webpack-vue-config": "^5.1.0",
+    "webpack-merge": "^5.8.0"
+  },
+  "engines": {
+    "node": "^14.0.0",
+    "npm": "^7.0.0"
   }
 }

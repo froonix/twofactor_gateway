@@ -1,12 +1,14 @@
 composer.phar
 
-/build
-/js/build
+/js
 
 /node_modules
 vendor/
+
 /nbproject/
+/.idea/
 
 /tests/clover.*
+/tests/.phpunit.result.cache
 
-.php_cs.cache
+.php-cs-fixer.cache

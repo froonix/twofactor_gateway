@@ -15,6 +15,17 @@ Interactive admin configuration:
 occ twofactorauth:gateway:configure sms
 ```
 
+### SMSGlobal 
+URL: https://www.smsglobal.com/
+Stability: Experimental
+
+Use the Webservices provided by SMSGlobal for sending SMS.
+
+Interactive admin configuration:
+```bash
+occ twofactorauth:gateway:configure sms
+```
+
 ### Signal
 URL: https://www.signal.org/
 Stability: Experimental
@@ -102,6 +113,17 @@ URL: https://voip.ms
 Stability: Experimental
 
 Use the SMS gateway provided by VoIP.ms for sending SMS.
+
+Interactive admin configuration:
+```bash
+occ twofactorauth:gateway:configure sms
+```
+
+## Voipbuster
+URL: https://voipbuster.com
+Stability: Experimental
+
+Use the HTTPS service provided by Voipbuster.com for sending SMS.
 
 Interactive admin configuration:
 ```bash
@@ -209,6 +231,17 @@ Stability: Experimental
 Use the HTTPS service provided by clicksend.com for sending SMS.
 
 Interactive admin configuration:
+```bash
+occ twofactorauth:gateway:configure sms
+```
+
+### SerwerSMS.pl
+URL: https://serwersms.pl
+Stability: Experimental
+
+Use the SMS gateway provided by SerwerSMS.pl (HTTPS JSON API) for sending SMS. The sender name provided during configuration must be added and approved in the SerwerSMS.pl customer portal.
+
+Interactive admin configuration (make sure to provide the full API login including the `webapi_` prefix):
 ```bash
 occ twofactorauth:gateway:configure sms
 ```

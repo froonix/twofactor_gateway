@@ -29,8 +29,7 @@ use OCA\TwoFactorGateway\Exception\ConfigurationException;
 use OCP\IConfig;
 
 class PuzzelSMSConfig implements IProviderConfig {
-
-	const expected = [
+	private const expected = [
 		'puzzel_url',
 		'puzzel_user',
 		'puzzel_password',
@@ -45,7 +44,7 @@ class PuzzelSMSConfig implements IProviderConfig {
 	}
 
 	private function getOrFail(string $key): string {
-		$val = $this->config->getAppValue(Application::APP_NAME, $key, null);
+		$val = $this->config->getAppValue(Application::APP_ID, $key, null);
 		if (is_null($val)) {
 			throw new ConfigurationException();
 		}
@@ -57,7 +56,7 @@ class PuzzelSMSConfig implements IProviderConfig {
 	}
 
 	public function setUrl(string $url) {
-		$this->config->setAppValue(Application::APP_NAME, 'puzzel_url', $url);
+		$this->config->setAppValue(Application::APP_ID, 'puzzel_url', $url);
 	}
 
 	public function getUser(): string {
@@ -65,7 +64,7 @@ class PuzzelSMSConfig implements IProviderConfig {
 	}
 
 	public function setUser(string $user) {
-		$this->config->setAppValue(Application::APP_NAME, 'puzzel_user', $user);
+		$this->config->setAppValue(Application::APP_ID, 'puzzel_user', $user);
 	}
 
 	public function getPassword(): string {
@@ -73,7 +72,7 @@ class PuzzelSMSConfig implements IProviderConfig {
 	}
 
 	public function setPassword(string $password) {
-		$this->config->setAppValue(Application::APP_NAME, 'puzzel_password', $password);
+		$this->config->setAppValue(Application::APP_ID, 'puzzel_password', $password);
 	}
 
 	public function getServiceId() {
@@ -81,17 +80,17 @@ class PuzzelSMSConfig implements IProviderConfig {
 	}
 
 	public function setServiceId(string $serviceid) {
-		$this->config->setAppValue(Application::APP_NAME, 'puzzel_serviceid', $serviceid);
+		$this->config->setAppValue(Application::APP_ID, 'puzzel_serviceid', $serviceid);
 	}
 
 	public function isComplete(): bool {
-		$set = $this->config->getAppKeys(Application::APP_NAME);
+		$set = $this->config->getAppKeys(Application::APP_ID);
 		return count(array_intersect($set, self::expected)) === count(self::expected);
 	}
 	
 	public function remove() {
-		foreach(self::expected as $key) {
-			$this->config->deleteAppValue(Application::APP_NAME, $key);
+		foreach (self::expected as $key) {
+			$this->config->deleteAppValue(Application::APP_ID, $key);
 		}
 	}
 }

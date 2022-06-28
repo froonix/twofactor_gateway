@@ -29,8 +29,7 @@ use OCA\TwoFactorGateway\Exception\ConfigurationException;
 use OCP\IConfig;
 
 class Sms77IoConfig implements IProviderConfig {
-
-	const expected = [
+	private const expected = [
 		'sms77io_api_key',
 	];
 
@@ -42,7 +41,7 @@ class Sms77IoConfig implements IProviderConfig {
 	}
 
 	private function getOrFail(string $key): string {
-		$val = $this->config->getAppValue(Application::APP_NAME, $key, null);
+		$val = $this->config->getAppValue(Application::APP_ID, $key, null);
 		if (is_null($val)) {
 			throw new ConfigurationException();
 		}
@@ -54,17 +53,17 @@ class Sms77IoConfig implements IProviderConfig {
 	}
 
 	public function setApiKey(string $apiKey) {
-		$this->config->setAppValue(Application::APP_NAME, 'sms77io_api_key', $apiKey);
+		$this->config->setAppValue(Application::APP_ID, 'sms77io_api_key', $apiKey);
 	}
 
 	public function isComplete(): bool {
-		$set = $this->config->getAppKeys(Application::APP_NAME);
+		$set = $this->config->getAppKeys(Application::APP_ID);
 		return count(array_intersect($set, self::expected)) === count(self::expected);
 	}
 	
 	public function remove() {
-		foreach(self::expected as $key) {
-			$this->config->deleteAppValue(Application::APP_NAME, $key);
+		foreach (self::expected as $key) {
+			$this->config->deleteAppValue(Application::APP_ID, $key);
 		}
 	}
 }

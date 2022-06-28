@@ -29,6 +29,7 @@ use OCA\TwoFactorGateway\PhoneNumberMask;
 use OCA\TwoFactorGateway\Service\Gateway\IGateway;
 use OCA\TwoFactorGateway\Service\StateStorage;
 use OCA\TwoFactorGateway\Settings\PersonalSettings;
+use OCP\Authentication\TwoFactorAuth\IDeactivatableByAdmin;
 use OCP\Authentication\TwoFactorAuth\IPersonalProviderSettings;
 use OCP\Authentication\TwoFactorAuth\IProvider;
 use OCP\Authentication\TwoFactorAuth\IProvidesIcons;
@@ -39,7 +40,7 @@ use OCP\IUser;
 use OCP\Security\ISecureRandom;
 use OCP\Template;
 
-abstract class AProvider implements IProvider, IProvidesIcons, IProvidesPersonalSettings {
+abstract class AProvider implements IProvider, IProvidesIcons, IDeactivatableByAdmin, IProvidesPersonalSettings {
 	public const STATE_DISABLED = 0;
 	public const STATE_START_VERIFICATION = 1;
 	public const STATE_VERIFYING = 2;
@@ -149,10 +150,17 @@ abstract class AProvider implements IProvider, IProvidesIcons, IProvidesPersonal
 	}
 
 	public function getLightIcon(): String {
-		return image_path(Application::APP_NAME, 'app.svg');
+		return image_path(Application::APP_ID, 'app.svg');
 	}
 
 	public function getDarkIcon(): String {
-		return image_path(Application::APP_NAME, 'app-dark.svg');
+		return image_path(Application::APP_ID, 'app-dark.svg');
+	}
+
+	public function disableFor(IUser $user) {
+		$state = $this->stateStorage->get($user, $this->gatewayName);
+		if ($state->getState() === self::STATE_ENABLED) {
+			$this->stateStorage->persist($state->disabled($user, $this->gatewayName));
+		}
 	}
 }

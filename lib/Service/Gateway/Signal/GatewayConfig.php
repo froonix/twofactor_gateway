@@ -29,8 +29,7 @@ use OCA\TwoFactorGateway\Service\Gateway\IGatewayConfig;
 use OCP\IConfig;
 
 class GatewayConfig implements IGatewayConfig {
-
-	const expected = [
+	private const expected = [
 		'signal_url',
 	];
 
@@ -42,7 +41,7 @@ class GatewayConfig implements IGatewayConfig {
 	}
 
 	private function getOrFail(string $key): string {
-		$val = $this->config->getAppValue(Application::APP_NAME, $key);
+		$val = $this->config->getAppValue(Application::APP_ID, $key);
 		if ($val === '') {
 			throw new ConfigurationException();
 		}
@@ -54,17 +53,17 @@ class GatewayConfig implements IGatewayConfig {
 	}
 
 	public function setUrl(string $url) {
-		$this->config->setAppValue(Application::APP_NAME, 'signal_url', $url);
+		$this->config->setAppValue(Application::APP_ID, 'signal_url', $url);
 	}
 
 	public function isComplete(): bool {
-		$set = $this->config->getAppKeys(Application::APP_NAME);
+		$set = $this->config->getAppKeys(Application::APP_ID);
 		return count(array_intersect($set, self::expected)) === count(self::expected);
 	}
 
 	public function remove() {
-		foreach(self::expected as $key) {
-			$this->config->deleteAppValue(Application::APP_NAME, $key);
+		foreach (self::expected as $key) {
+			$this->config->deleteAppValue(Application::APP_ID, $key);
 		}
 	}
 }

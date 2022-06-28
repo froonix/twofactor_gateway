@@ -5,9 +5,10 @@
 	<name>Two-Factor Gateway</name>
 	<summary>Two-factor gateway providers (SMS, Telegram, Signal)</summary>
 	<description>A set of Nextcloud two-factor providers to send authentication codes via Signal, SMS and Telegram.</description>
-	<version>0.16.0</version>
+	<version>0.20.0</version>
 	<licence>agpl</licence>
 	<author>Christoph Wurst</author>
+	<author>Vitor Mattos</author>
 	<namespace>TwoFactorGateway</namespace>
 	<documentation>
 		<admin>https://nextcloud-twofactor-gateway.readthedocs.io/en/latest/Admin%20Documentation/</admin>
@@ -15,11 +16,10 @@
 	<category>security</category>
 	<website>https://github.com/nextcloud/twofactor_gateway</website>
 	<bugs>https://github.com/nextcloud/twofactor_gateway/issues</bugs>
-	<screenshot>https://raw.githubusercontent.com/ChristophWurst/twofactor_gateway/3f895bc997c1a3a38c9bae16ccae8bd499af864e/screenshots/settings.png</screenshot>
-	<screenshot>https://raw.githubusercontent.com/ChristophWurst/twofactor_gateway/3f895bc997c1a3a38c9bae16ccae8bd499af864e/screenshots/challenge.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/twofactor_gateway/3f895bc997c1a3a38c9bae16ccae8bd499af864e/screenshots/settings.png</screenshot>
+	<screenshot>https://raw.githubusercontent.com/nextcloud/twofactor_gateway/3f895bc997c1a3a38c9bae16ccae8bd499af864e/screenshots/challenge.png</screenshot>
 	<dependencies>
-		<php min-version="7.2" max-version="7.4"/>
-		<nextcloud min-version="16" max-version="19"/>
+		<nextcloud min-version="22" max-version="25"/>
 	</dependencies>
 
 	<two-factor-providers>
