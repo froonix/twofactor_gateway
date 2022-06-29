@@ -30,7 +30,6 @@ use OCA\TwoFactorGateway\Service\Gateway\SMS\Gateway as SMSGateway;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\GatewayConfig as SMSConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\ClickSendConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\ClockworkSMSConfig;
-use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\CustomSMS;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\CustomSMSConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\EcallSMSConfig;
 use OCA\TwoFactorGateway\Service\Gateway\SMS\Provider\PlaySMSConfig;
@@ -127,80 +126,86 @@ class Configure extends Command {
 				/** @var CustomSMSConfig $providerConfig */
 				$providerConfig = $config->getProvider()->getConfig();
 
-				ReTypeUrl:
-				$urlQuestion = new Question('Please enter the web service URL: ');
-				$url = $helper->ask($input, $output, $urlQuestion);
+				while (true) {
+					$urlQuestion = new Question('Please enter the web service URL: ');
+					$url = $helper->ask($input, $output, $urlQuestion);
 
-				if(!filter_var($url, FILTER_VALIDATE_URL))
-				{
-					$output->writeln('Invalid URL '.$url);
-					goto ReTypeUrl;
-				}
-
-				ReTypeMethod:
-				$methodQuestion = new Question('Please enter the web service method (GET or POST): ');
-				$method = (string)$helper->ask($input, $output, $methodQuestion);
-
-				if(strtolower($method) != 'get' && strtolower($method) != 'post')
-				{
-					$output->writeln('Invalid method '.$method);
-					goto ReTypeMethod;
-				}
-
-				ReTypeIdentifier:
-				$identifierQuestion = new Question('Please enter the identifier parameter for mobile number (Eg. mobile or number): ');
-				$identifier = $helper->ask($input, $output, $identifierQuestion);
-
-				if(empty($identifier))
-				{
-					$output->writeln('Mobile number parameter cannot be empty');
-					goto ReTypeIdentifier;
-				}
-
-				ReTypeMessage:
-				$messageQuestion = new Question('Please enter the message parameter (Eg. msg, sms, message): ');
-				$message = $helper->ask($input, $output, $messageQuestion);
-
-				if(empty($message))
-				{
-					$output->writeln('Message parameter cannot be empty');
-					goto ReTypeMessage;
-				}
-
-				ReTypeHeaders:
-				$headersQuestion = new Question('Please enter any http headers (Eg. x-api-key=123456789&x-api-token=ABCD12345 etc.): ');
-				$headers = $helper->ask($input, $output, $headersQuestion);
-
-				if(!empty($headers))
-				{
-					parse_str($headers, $headers_array);
-					if(!is_array($headers_array))
-					{
-						$output->writeln('headers is invalid');
-						goto ReTypeHeaders;
+					if (!filter_var($url, FILTER_VALIDATE_URL)) {
+						$output->writeln('Invalid URL! Please try again...');
+						continue;
 					}
-				}
-				else
-				{
-					$headers='';
+
+					break;
 				}
 
-				ReTypeParameters:
-				$parametersQuestion = new Question('Please enter any extra parameters (Eg. sender=nextcloud&username=nextcloud&password=1234 etc.): ');
-				$parameters = $helper->ask($input, $output, $parametersQuestion);
+				while (true) {
+					$methodQuestion = new Question('Please enter the web service method (GET or POST): ');
+					$method = strtolower((string) $helper->ask($input, $output, $methodQuestion));
 
-				if(!empty($parameters))
-				{
-					parse_str($parameters, $parameters_array);
-					if(!is_array($parameters_array))
-					{
-						$output->writeln('Extra parameters is invalid');
-						goto ReTypeParameters;
+					if ($method !== 'get' && $method !== 'post') {
+						$output->writeln('Invalid method! Please try again...');
+						continue;
 					}
+
+					break;
 				}
-				else
-				{
-					$parameters='';
+
+				while (true) {
+					$identifierQuestion = new Question('Please enter the identifier parameter for mobile number (Eg. mobile or number): ');
+					$identifier = $helper->ask($input, $output, $identifierQuestion);
+
+					if (empty($identifier)) {
+						$output->writeln('Mobile number parameter cannot be empty! Please try again...');
+						continue;
+					}
+
+					break;
+				}
+
+				while (true) {
+					$messageQuestion = new Question('Please enter the message parameter (Eg. msg, sms, message): ');
+					$message = $helper->ask($input, $output, $messageQuestion);
+
+					if (empty($message)) {
+						$output->writeln('Message parameter cannot be empty! Please try again...');
+						continue;
+					}
+
+					break;
+				}
+
+				while (true) {
+					$headersQuestion = new Question('Please enter any http headers (Eg. x-api-key=123456789&x-api-token=ABCD12345 etc.): ');
+					$headers = $helper->ask($input, $output, $headersQuestion);
+
+					if (!empty($headers)) {
+						parse_str($headers, $headers_array);
+						if (!is_array($headers_array)) {
+							$output->writeln('Headers are invalid! Please try again...');
+							continue;
+						}
+					} else {
+						$headers = '';
+					}
+
+					break;
+				}
+
+				while (true) {
+					$parametersQuestion = new Question('Please enter any extra parameters (Eg. sender=nextcloud&username=nextcloud&password=1234 etc.): ');
+					$parameters = $helper->ask($input, $output, $parametersQuestion);
+
+					if (!empty($parameters)) {
+						parse_str($parameters, $parameters_array);
+						if (!is_array($parameters_array)) {
+							$output->writeln('Extra parameters are invalid!  Please try again...');
+							continue;
+						}
+					} else {
+						$parameters = '';
+					}
+
+					break;
 				}
 
 				$providerConfig->setUrl($url);

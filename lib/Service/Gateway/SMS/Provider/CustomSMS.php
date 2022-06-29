@@ -51,51 +51,42 @@ class CustomSMS implements IProvider {
 	 */
 	public function send(string $identifier, string $message) {
 		$config = $this->getConfig();
+		$method = strtolower($config->getMethod());
 
 		try {
-
-			if(strtolower($config->getMethod()) == 'get')
-			{
+			if ($method === 'get') {
 				$options = [
-					'query'=> [
-						$config->getIdentifier()=>$identifier,
-						$config->getMessage()=>$message,
+					'query' => [
+						$config->getIdentifier() => $identifier,
+						$config->getMessage() => $message,
 					]
 				];
 				parse_str($config->getHeaders(), $headers);
-				if(!empty($headers))
-				{
+				if (!empty($headers)) {
 					$options['headers'] = $headers;
 				}
 				parse_str($config->getParameters(), $parameters);
-				if(!empty($parameters))
-				{
+				if (!empty($parameters)) {
 					$options['query'] = $options['query'] + $parameters;
 				}
-				$response = $this->client->get($config->getUrl(),$options);
-			}
-
-			if(strtolower($config->getMethod()) == 'post')
-			{
+				$response = $this->client->get($config->getUrl(), $options);
+			} elseif ($method === 'post') {
 				$options = [
-					'body'=> [
-						$config->getIdentifier()=>$identifier,
-						$config->getMessage()=>$message,
+					'body' => [
+						$config->getIdentifier() => $identifier,
+						$config->getMessage() => $message,
 					]
 				];
 				parse_str($config->getHeaders(), $headers);
-				if(!empty($headers))
-				{
+				if (!empty($headers)) {
 					$options['headers'] = $headers;
 				}
 				parse_str($config->getParameters(), $parameters);
-				if(!empty($parameters))
-				{
+				if (!empty($parameters)) {
 					$options['body'] = $options['body'] + $parameters;
 				}
-				$this->client->post($config->getUrl(),$options);
+				$this->client->post($config->getUrl(), $options);
 			}
-
 		} catch (Exception $ex) {
 			throw new SmsTransmissionException();
 		}
